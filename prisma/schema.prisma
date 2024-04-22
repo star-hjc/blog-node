@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/blog"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  code      BigInt   @unique @default(10000000)
+  email     String?  @db.VarChar(32)
+  phone     String?  @unique @db.VarChar(16)
+  password  String   @db.VarChar(36)
+  name      String?  @db.VarChar(16)
+  // 头像
+  avatar    String?  @db.LongText
+  // 身份
+  identity  Int      @default(0)
+  WeChat    String?  @db.VarChar(32)
+  QQ        String?  @db.VarChar(16)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  stars     Star[]
+  likes     Like[]
+
+  @@map("t_user")
+}
+
+model Post {
+  id        String      @id @default(uuid()) @db.VarChar(36)
+  authorId  String      @db.VarChar(36)
+  // 封面
+  cover     String      @db.LongText
+  title     String      @db.VarChar(32)
+  content   String?     @db.LongText
+  // 目录
+  catalog   Json
+  // 是否发版
+  published Boolean     @default(false)
+  // 查看数
+  watch     Int         @default(0)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  author    User        @relation(fields: [authorId], references: [id])
+  postlabel PostLabel[]
+  stars     Star[]
+  likes     Like[]
+
+  @@map("t_post")
+}
+
+model Label {
+  id        String      @id @default(uuid()) @db.VarChar(36)
+  name      String      @unique @db.VarChar(32)
+  // 是否发版
+  published Boolean     @default(false)
+  postlabel PostLabel[]
+
+  @@map("t_label")
+}
+
+model Star {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  postId    String   @db.VarChar(36)
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String   @db.VarChar(36)
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("t_star")
+}
+
+model Like {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  postId      String   @db.VarChar(36)
+  post        Post     @relation(fields: [postId], references: [id])
+  userId      String   @db.VarChar(36)
+  user        User     @relation(fields: [userId], references: [id])
+  previousNum Int      @default(0) // 之前的 oldNum 更名为 previousNum
+  currentNum  Int      @default(0) // 之前的 num 更名为 currentNum
+  updatedAt   DateTime @updatedAt
+
+  @@map("t_like")
+}
+
+model PostLabel {
+  id      String @id @default(uuid()) @db.VarChar(36)
+  postId  String @db.VarChar(36)
+  posts   Post   @relation(fields: [postId], references: [id])
+  labelId String @db.VarChar(36)
+  labels  Label  @relation(fields: [labelId], references: [id])
+
+  @@unique([postId, labelId])
+  @@map("t_post_label")
+}
