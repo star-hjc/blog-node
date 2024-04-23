@@ -1,4 +1,4 @@
-const { blogDB } = require('./index')
+const { blogDB } = require('./')
 const { objectSplit } = require('../../utils/object')
 
 const addPost = async (data) => {
@@ -89,24 +89,27 @@ const searchPosts = async (options = {}) => {
             }
         ]
     }
-   return await getPostList(options, { where: value ? where : void 0 })
+    return await getPostList(options, { where: value ? where : void 0 })
 }
 
 /**
  * 
  * @param { { pageNum: Number, pageSize: Number } } options 参数
- * @param options.value      搜索关键字(title:标题,label:标签,content:内容)
  * @param options.pageNum    页码
+ * @param options.pageSize   每页多少条
  * @param { Object } findManyOptions 表查询参数
  * @returns 
  */
-const getPostList = async (options = {}, findManyOptions) => {
+const getPostList = async (options = {}, findManyOptions = {}) => {
     const pageNum = options.pageNum || 1
     const pageSize = options.pageSize || 10
     return await blogDB.post.findMany({
         skip: (pageNum - 1) * pageSize,
         take: pageSize,
         include: {
+            author: {
+                include: true
+            },
             postlabel: {
                 include: {
                     labels: {

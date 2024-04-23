@@ -18,8 +18,8 @@ const errorMV = (req, res, next) => {
             code: 500,
             message: '服务端发生一个未知的错误...',
             path: req.originalUrl || '未知的路径...',
-            ...options,
-            data: null
+            data: null,
+            ...options
         })
     }
     next()

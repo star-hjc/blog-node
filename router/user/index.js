@@ -4,7 +4,7 @@ const ms = require('ms')
 const { getToken, redis, sendEmali } = require('../../modules')
 const { jwt: { signOptions: { expiresIn } }, mali } = require('../../config/settings')
 const { cerateValidcode } = require('../../utils/tools')
-const { emailValidate } = require('../../utils/regexp')
+const { emailRegexp } = require('../../utils/regexp')
 const { userModel } = require('../../domain')
 
 
@@ -30,7 +30,7 @@ router.get('/token', async (req, res) => {
     res.err({ code: 401, message: '登录超时，请重新登录...' })
 })
 
-router.patch('/email', async (req, res) => {
+router.get('/email', async (req, res) => {
     const { email } = req.body
     const key = `emli-validcode-${email}`
     const ttl = await redis().ttl(key)
@@ -48,9 +48,10 @@ router.patch('/email', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { user, pwd, emailValidCode } = req.body
+    console.log(user);
     const users = await userModel.getUserByInfo(user)
     /** 邮箱验证码登录、注册 */
-    if (emailValidate.test(user) && emailValidCode !== void 0) {
+    if (emailRegexp.test(user) && emailValidCode !== void 0) {
         const code = await redis().get(`emli-validcode-${user}`)
         if (!code || code !== emailValidCode) return res.err({ message: '输入的验证码错误...' })
         let token = ''

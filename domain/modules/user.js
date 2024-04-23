@@ -1,4 +1,4 @@
-const { blogDB } = require('./index')
+const { blogDB } = require('./')
 const { objectSplit } = require('../../utils/object')
 /**
  * 
@@ -37,11 +37,13 @@ const editUser = async (options = {}) => {
  * @returns 
  */
 const getUserByInfo = async (user) => {
+    console.log(user);
     return await blogDB.user.findMany({
         where: {
             OR: [{ email: user }, { phone: user }, { code: isNaN(Number(user)) ? 0 : Number(user) }]
         }
     })
+    return []
 }
 
 /**

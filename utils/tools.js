@@ -1,3 +1,5 @@
+const Joi = require('joi')
+
 function cerateValidcode(length = 6) {
     let code = ''
     for (let i = 0; i < length; i++) {
@@ -8,6 +10,10 @@ function cerateValidcode(length = 6) {
 
 function rand(max = 14, min = 0) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function joi(){
+
 }
 
 

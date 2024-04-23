@@ -76,6 +76,9 @@ module.exports = {
     certOptions: {},
     user: {
         /** 默认的password */
-        password: '123456789'
+        password: '123456789',
+        /** 每天最大点赞数量  */
+        MaximumLikesPerDay: 10,
     }
+
 }
