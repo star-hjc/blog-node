@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const { jwt: { signOptions }, expressjwtOptions: { secret } } = require('../../config/settings')
+const { jwt: { expressjwtOptions: { secret, signOptions } } } = require('../../config/settings')
 
 /**
  *  获取token

@@ -1,21 +1,6 @@
 module.exports = {
     /** mysql连接配置 */
-    mysql: [
-        {
-            /** ip地址 */
-            host: 'starserve.xyz',
-            /** 端口 */
-            port: '13306',
-            /** 用户名 */
-            user: 'blog',
-            /** 密码 */
-            password: 'dCNdF4eAJhir8Qdd',
-            /** 数据库名 */
-            database: 'my-blog',
-            /** 字符集 */
-            charset: 'UTF8MB4_BIN'
-        }
-    ],
+    mysql: { MAX_RETRIES: 5 },
     redis: [
         {
             /** ip地址 */
@@ -51,24 +36,24 @@ module.exports = {
             }
         }
     },
-    expressjwtOptions: {
-        /** Token密钥 */
-        secret: 'Star@2024ShenZhen',
-        algorithms: ['HS256']
-    },
-    expressjwtUnlessOptions: {
-        /** 不验证的路由 */
-        path: ['/', '/api/blog', '/api/user/login', '/api/user/email', '/api/post/list']
+    jwt: {
+        expressjwtOptions: {
+            /** Token密钥 */
+            secret: 'Star@2024ShenZhen',
+            algorithms: ['HS256'],
+            /** token有效时长 */
+        },
+        expressjwtUnlessOptions: {
+            /** 不验证的路由 */
+            path: ['/', '/api/blog', '/api/user/login', '/api/user/email', '/api/post/list']
+        },
+        signOptions: {
+            expiresIn: '1h'
+        },
     },
     port: {
         http: 8888,
         https: 9999
-    },
-    jwt: {
-        /** token有效时长 */
-        signOptions: {
-            expiresIn: '1h'
-        },
     },
     router: {
         prefix: '/api'

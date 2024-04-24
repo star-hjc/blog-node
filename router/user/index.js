@@ -24,7 +24,7 @@ router.get('/token', async (req, res) => {
     const { code, refresh } = req.auth
     if (refresh) {
         console.log(code);
-        const user = await userModel.searchUser({ code })
+        const user = await userModel.getUserByCode(code)
         return res.data({ token: getUserToken(user), refreshToken: getUserRefreshToken(code) })
     }
     res.err({ code: 401, message: '登录超时，请重新登录...' })
@@ -80,14 +80,14 @@ router.post('/login', async (req, res) => {
 /** 获取用户信息 */
 router.get('/', async (req, res) => {
     const code = req.body?.code || req.auth?.code
-    const { email, phone, name, avatar, identity, WeChat, QQ } = await userModel.searchUser({ code })
+    console.log( await userModel.searchUser({ code }));
+    const { email, phone, name, avatar, WeChat, QQ } = await userModel.searchUser({ code })
     res.data({
         code,
         email,
         phone,
         name,
         avatar,
-        identity,
         WeChat,
         QQ
     })

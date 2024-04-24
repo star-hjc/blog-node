@@ -4,7 +4,7 @@ const { expressjwt } = require('express-jwt')
 const http = require('node:http')
 const https = require('node:https')
 const { MV: { initMV, globalErrorMV } } = require('./modules/index.js')
-const { expressjwtOptions, expressjwtUnlessOptions, port, certOptions } = require('./config/settings.js')
+const { jwt: { expressjwtOptions, expressjwtUnlessOptions }, port, certOptions } = require('./config/settings.js')
 const router = require('./router')
 const app = Express()
 

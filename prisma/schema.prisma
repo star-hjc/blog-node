@@ -15,25 +15,50 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.VarChar(36)
-  code      BigInt   @unique @default(10000000)
-  email     String?  @db.VarChar(32)
-  phone     String?  @unique @db.VarChar(16)
-  password  String   @db.VarChar(36)
-  name      String?  @db.VarChar(16)
+  id        String     @id @default(uuid()) @db.VarChar(36)
+  code      BigInt     @unique @default(10000000)
+  email     String?    @db.VarChar(32)
+  phone     String?    @unique @db.VarChar(16)
+  password  String     @db.VarChar(36)
+  name      String?    @db.VarChar(16)
   // 头像
-  avatar    String?  @db.LongText
-  // 身份
-  identity  Int      @default(0)
-  WeChat    String?  @db.VarChar(32)
-  QQ        String?  @db.VarChar(16)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  avatar    String?    @db.LongText
+  WeChat    String?    @db.VarChar(32)
+  QQ        String?    @db.VarChar(16)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   posts     Post[]
   stars     Star[]
   likes     Like[]
+  userRole  UserRole[]
 
   @@map("t_user")
+}
+
+model Role {
+  id       String @id @default(uuid()) @db.VarChar(36)
+  code     Int        @unique @default(autoincrement())
+  name     String     @unique @db.VarChar(32)
+  userRole UserRole[]
+
+  @@map("t_role")
+}
+
+model UserRole {
+  id     String @id @default(uuid()) @db.VarChar(36)
+  userId String @db.VarChar(36)
+  user   User   @relation(fields: [userId], references: [id])
+  roleId String @db.VarChar(36)
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@map("t_user_role")
+}
+
+model Menu {
+  id   String @id @default(uuid()) @db.VarChar(36)
+  path String
+
+  @@map("t_menu")
 }
 
 model Post {

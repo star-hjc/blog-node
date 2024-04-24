@@ -58,7 +58,7 @@ router.get('/details', (req, res, next) => {
 
 router.post('/add', async (req, res) => {
     const { code } = req.auth
-    const user = await userModel.searchUser({ code })
+    const user = await userModel.getUserByCode(code)
     res.data(await postModel.createPost({
         authorId: user.id,
         cover: '测试头像',
@@ -86,7 +86,7 @@ router.post('/star', (req, res, next) => {
         await starModel.deleteStarPost(star.id)
         return res.data({ isStar: false }, { message: '取消收藏成功...' })
     }
-    const user = await userModel.searchUser({ code })
+    const user = await userModel.getUserByCode(code)
     await starModel.createStarPost(user.id, postId)
     res.data({ isStar: true }, { message: '收藏成功...' })
 })
@@ -112,7 +112,7 @@ router.post('/like', (req, res, next) => {
     const num = Math.min(MaximumLikesPerDay, Math.max(1, req.body?.num || 1))
     const like = await likeModel.getlikePost(code, postId)
     if (!like) {
-        const user = await userModel.searchUser({ code })
+        const user = await userModel.getUserByCode(code)
         const likepost = await likeModel.createlikePost({
             userId: user.id,
             postId,

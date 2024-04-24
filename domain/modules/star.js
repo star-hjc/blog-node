@@ -1,4 +1,3 @@
-const { user } = require('../../config/settings')
 const { blogDB } = require('./')
 
 /**

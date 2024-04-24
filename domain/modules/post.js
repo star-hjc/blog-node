@@ -103,6 +103,7 @@ const searchPosts = async (options = {}) => {
 const getPostList = async (options = {}, findManyOptions = {}) => {
     const pageNum = options.pageNum || 1
     const pageSize = options.pageSize || 10
+    const pageCount = await blogDB.post.count()
     return await blogDB.post.findMany({
         skip: (pageNum - 1) * pageSize,
         take: pageSize,
@@ -121,6 +122,7 @@ const getPostList = async (options = {}, findManyOptions = {}) => {
         ...findManyOptions
     })
 }
+
 
 module.exports = { getPostList, searchPosts, watchPost, addPost, createPost }
 
